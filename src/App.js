@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import useBookSearch from './useBookSearch'
+import './App.css'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -26,20 +27,45 @@ function App() {
     },
     [loading, hasMore]
   )
-
+  const uid = () => new Date().getTime() + Math.random().toString(16).slice(2)
   return (
     <div className="app-wrapper">
       <input type="text" value={query} onChange={handleQuery} />
       <div>
-        {books.map((book, index) => {
+        {books.map(({ title, isbn, bookId }, index) => {
           if (books.length === index + 1) {
             return (
-              <div key={book} ref={lastBookElement}>
-                {book}
-              </div>
+              <figure key={uid()} ref={lastBookElement} className="book">
+                <a
+                  href={`https://openlibrary.org/isbn/${isbn}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={`https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`}
+                    alt={`${title}`}
+                  />
+                </a>
+                <figcaption>{title}</figcaption>
+              </figure>
             )
           } else {
-            return <div key={book}>{book}</div>
+            return (
+              <figure key={uid()} className="book">
+                <a
+                  href={`https://openlibrary.org/isbn/${isbn}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={`https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`}
+                    alt={`${title}`}
+                  />
+                </a>
+
+                <figcaption>{title}</figcaption>
+              </figure>
+            )
           }
         })}
       </div>

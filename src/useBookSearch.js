@@ -24,7 +24,16 @@ export default function useBookSearch(query, pageNumber) {
     })
       .then((res) => {
         setBooks((prevBooks) => [
-          ...new Set([...prevBooks, ...res.data.docs.map((b) => b.title)]),
+          ...new Set([
+            ...prevBooks,
+            ...res.data.docs.map((b) => {
+              return {
+                title: b.title,
+                isbn: b.isbn?.[0] ?? '',
+                bookId: b?.cover_edition_key ?? '',
+              }
+            }),
+          ]),
         ])
         setHasMore(res.data.docs.length > 0)
         setLoading(false)
